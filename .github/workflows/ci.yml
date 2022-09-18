@@ -40,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: InfotableInspectorWidget
-          path: dist/build/distributions/*.zip
+          path: build/distributions/*.zip
           retention-days: 1
