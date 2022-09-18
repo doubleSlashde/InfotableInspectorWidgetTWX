@@ -50,6 +50,9 @@ TW.IDE.Widgets.infotableinspector = function () {
 		var thisWidget = this;
 		var refreshHtml = false;
 		switch (name) {
+			case "DisplayName":
+				refreshHtml = true;
+				break;
 			default:
 				break;
 		}
@@ -73,7 +76,7 @@ TW.IDE.Widgets.infotableinspector = function () {
 		// If you want it to change depending on properties that the user
 		// has set, you can use this.getProperty(propertyName).
 		return '<div class="widget-content widget-infotableinspector">' +
-			'<span class="infotableinspector-property">' + "infotableinspector - invisible @ runtime" + '</span>' +
+			'<span class="infotableinspector-property">' + this.properties.DisplayName + " - invisible @ runtime" + '</span>' +
 			'</div>';
 	};
 
