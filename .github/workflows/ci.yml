@@ -39,6 +39,6 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: InfotableInspectorWidget-v1.1.${{ GITHUB_RUN_NUMBER }}
+          name: InfotableInspectorWidget-v1.1.${{ github.GITHUB_RUN_NUMBER }}
           path: build/distributions/*.zip
           retention-days: 1
