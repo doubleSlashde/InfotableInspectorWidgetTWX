@@ -32,4 +32,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: gradlew clean build -PBUILD_NUMBER=$GITHUB_RUN_ID -PBUILD_SOURCEBRANCH=$GITHUB_REF_NAME -PBUILD_SOURCEVERSION=$GITHUB_SHA -PPACKAGE_VERSION=1.0.$GITHUB_RUN_ID
+        run: ./gradlew clean build -PBUILD_NUMBER=$GITHUB_RUN_ID -PBUILD_SOURCEBRANCH=$GITHUB_REF_NAME -PBUILD_SOURCEVERSION=$GITHUB_SHA -PPACKAGE_VERSION=1.0.$GITHUB_RUN_ID
