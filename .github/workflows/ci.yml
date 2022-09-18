@@ -34,11 +34,11 @@ jobs:
       - name: Build extension
         run: |
           chmod +x gradlew
-          ./gradlew clean build -PBUILD_NUMBER=$GITHUB_RUN_NUMBER -PBUILD_SOURCEBRANCH=$GITHUB_REF_NAME -PBUILD_SOURCEVERSION=$GITHUB_SHA -PPACKAGE_VERSION=1.0.$GITHUB_RUN_NUMBER
+          ./gradlew clean build -PBUILD_NUMBER=$GITHUB_RUN_NUMBER -PBUILD_SOURCEBRANCH=$GITHUB_REF_NAME -PBUILD_SOURCEVERSION=$GITHUB_SHA -PPACKAGE_VERSION=1.1.$GITHUB_RUN_NUMBER
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: InfotableInspectorWidget
+          name: InfotableInspectorWidget-v1.1.$GITHUB_RUN_NUMBER
           path: build/distributions/*.zip
           retention-days: 1
