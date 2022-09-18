@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Entities>
+    <ExtensionPackages>
+        <ExtensionPackage dependsOn="" description="Widget can tell you about the rows of an infotable" minimumThingWorxVersion="8.0.0" name="InfotableInspectorWiget" packageVersion="1.0.17" buildNumber="" vendor="doubleSlash Net-Business GmbH"> 
+        </ExtensionPackage>
+    </ExtensionPackages>
+    <Widgets>
+        <Widget name="infotableinspector">
+            <UIResources>
+                <FileResource description="" file="infotableinspector.ide.js" isDevelopment="true" isRuntime="false" type="JS"/>
+                <FileResource description="" file="infotableinspector.ide.css" isDevelopment="true" isRuntime="false" type="CSS"/>
+                <FileResource description="" file="infotableinspector.runtime.js" isDevelopment="false" isRuntime="true" type="JS"/>
+                <FileResource description="" file="infotableinspector.runtime.css" isDevelopment="false" isRuntime="true" type="CSS"/>
+            </UIResources>
+        </Widget>
+    </Widgets>
+</Entities>
