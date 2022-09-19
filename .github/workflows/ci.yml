@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       version: 1.1.${{ github.run_number }}
+      patchVersion: ${{ github.run_number }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -35,7 +36,7 @@ jobs:
       - name: Build extension
         run: |
           chmod +x gradlew
-          ./gradlew clean build -PBUILD_NUMBER=$GITHUB_RUN_NUMBER -PBUILD_SOURCEBRANCH=$GITHUB_REF_NAME -PBUILD_SOURCEVERSION=$GITHUB_SHA -PPACKAGE_VERSION=${{ env.version }}
+          ./gradlew clean build -PBUILD_NUMBER=${{ env.patchVersion }} -PBUILD_SOURCEBRANCH=$GITHUB_REF_NAME -PBUILD_SOURCEVERSION=$GITHUB_SHA -PPACKAGE_VERSION=${{ env.version }}
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
