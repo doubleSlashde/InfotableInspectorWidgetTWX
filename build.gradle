@@ -1,0 +1,110 @@
+apply plugin: 'java'
+
+defaultTasks 'clean', 'build'
+
+ext {
+    package_version = "GENERATE"
+    build_number = "SNAPSHOT"
+    source_version = "SNAPSHOT"
+	source_branch = "-"
+
+    packageVersion = System.getenv("PACKAGE_VERSION") ?: package_version
+    buildNumber = System.getenv("BUILD_NUMBER") ?: build_number
+    sourceVersion = System.getenv("BUILD_SOURCEVERSION") ?: source_version
+    sourceBranch = System.getenv("BUILD_SOURCEBRANCH") ?: source_branch
+
+    if (project.hasProperty('BUILD_NUMBER')) {
+        logger.info("BUILD_NUMBER passed")
+        buildNumber = project.getProperty('BUILD_NUMBER')
+    }
+
+    if (project.hasProperty('PACKAGE_VERSION')) {
+        logger.info("PACKAGE_VERSION passed")
+        packageVersion = project.getProperty('PACKAGE_VERSION')
+    }
+
+    if (project.hasProperty('BUILD_SOURCEVERSION')) {
+        logger.info("BUILD_SOURCEVERSION passed")
+        sourceVersion = project.getProperty('BUILD_SOURCEVERSION')
+    }
+
+    if (project.hasProperty('BUILD_SOURCEBRANCH')) {
+        logger.info("BUILD_SOURCEBRANCH passed")
+        sourceBranch = project.getProperty('BUILD_SOURCEBRANCH')
+    }
+
+    if (buildNumber == "SNAPSHOT") {
+        def date = new Date()
+        def prefix = "SNAPSHOT-"
+        buildNumber = prefix + date.format('yyyyMMddHHmmss')
+    }
+    
+    if (packageVersion == "GENERATE") {
+        def date = new Date()
+        def dateString = date.format('yyyyMMdd').toString()
+        def timeString = date.format('HHmmss').toString()
+        packageVersion = "0." + dateString + "." + timeString
+    }
+
+    logger.lifecycle("Using packageVersion: '{}'.", packageVersion)
+    logger.lifecycle("Using buildNumber: '{}'.", buildNumber)
+    logger.lifecycle("Using sourceVersion: '{}'.", sourceVersion)
+	logger.lifecycle("Using sourceBranch: '{}'.", sourceBranch)
+    
+    zipName = project.name + "-v" + packageVersion + ".zip"
+}
+
+artifacts {
+    archives file: file('build/distributions/' + zipName), name: zipName, type: 'zip'
+}
+
+clean {
+    delete 'build/Entities'
+}
+
+task copyMetadata(type: Copy) {
+    from 'configfiles'
+    into 'build/configfiles'
+}
+
+task setPackageVersion(dependsOn: 'copyMetadata') {
+    doLast {
+        File metadata = file('build/configfiles/metadata.xml')
+        String contentMetaData = metadata.getText("UTF-8")
+        String regexPackageVersion = "(packageVersion=\")([^\"]*)"
+
+        contentMetaData = contentMetaData.replaceAll(regexPackageVersion, "\$1" + packageVersion)
+        metadata.write(contentMetaData, "UTF-8")
+    }
+}
+
+task setBuildNumber(dependsOn: 'setPackageVersion') {
+    doLast {
+        File metadata = file('build/configfiles/metadata.xml')
+        String contentMetaData = metadata.getText("UTF-8")
+        String regexPackageVersion = "(buildNumber=\")([^\"]*)"
+
+        def packageVersionString = "\$1" + buildNumber + " - (Branch: " + sourceBranch + ", Revision: " + sourceVersion + ")"
+        contentMetaData = contentMetaData.replaceAll(regexPackageVersion, packageVersionString)
+
+        metadata.write(contentMetaData, "UTF-8")
+    }
+}
+build.dependsOn('setBuildNumber')
+
+task createZip(type:Zip) {
+    archiveName = zipName
+
+    // include the metadata.xml
+    from 'build/configfiles'
+        include 'metadata.xml'
+
+    // for if there are widgets in the extension
+    from ('ui') {
+        include '**/*.*'
+        into 'ui'
+    }
+
+    logger.lifecycle("Created archive: '{}'.", archiveName)
+}
+build.finalizedBy(createZip)
